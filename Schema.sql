@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS InPlaylist;
 SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE `User` (
-	`User_ID` VARCHAR(64) NOT NULL,
+	`User_ID` VARCHAR(128) NOT NULL,
 	`username` VARCHAR(64) NOT NULL,
 	`password` VARCHAR(64) NOT NULL,
 	PRIMARY KEY (`User_ID`,`username`)
@@ -29,6 +29,7 @@ CREATE TABLE `Votes` (
 	`Vote_ID` INT(9) NOT NULL AUTO_INCREMENT,
 	`Item_ID` INT(9) NOT NULL,
 	`User_ID` VARCHAR(64) NOT NULL,
+    `Value` INT(1) NOT NULL,
 	PRIMARY KEY (`Vote_ID`),
     FOREIGN KEY (`Item_ID`) REFERENCES Song_Item(`Item_ID`),
     FOREIGN KEY (`User_ID`) REFERENCES User(`User_ID`)
@@ -44,7 +45,7 @@ CREATE TABLE `InPlaylist`(
     `Entry_ID` INT(9) NOT NULL AUTO_INCREMENT,
     `Item_ID` INT(9) NOT NULL,
     `Playlist_ID` VARCHAR(128) NOT NULL,
-    `votes` INT(9),
+    `Votes` INT(9),
     PRIMARY KEY(`Entry_ID`),
     FOREIGN KEY (`Item_ID`) REFERENCES Song_Item(`Item_ID`),
     FOREIGN KEY (`Playlist_ID`) REFERENCES Playlist(`Playlist_ID`)
