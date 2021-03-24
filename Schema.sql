@@ -25,6 +25,9 @@ CREATE TABLE `Song_Item` (
 	PRIMARY KEY (`Item_ID`)
 );
 
+-- Need to Associate Votes with a Playlist, Votes are unique to a playlist
+-- Perhaps use Entry_ID Instead of Item_ID?
+
 CREATE TABLE `Votes` (
 	`Vote_ID` INT(9) NOT NULL AUTO_INCREMENT,
 	`Item_ID` INT(9) NOT NULL,
