@@ -25,19 +25,6 @@ CREATE TABLE `Song_Item` (
 	PRIMARY KEY (`Item_ID`)
 );
 
--- Need to Associate Votes with a Playlist, Votes are unique to a playlist
--- Perhaps use Entry_ID Instead of Item_ID?
-
-CREATE TABLE `Votes` (
-	`Vote_ID` INT(9) NOT NULL AUTO_INCREMENT,
-	`Item_ID` INT(9) NOT NULL,
-	`User_ID` VARCHAR(64) NOT NULL,
-    `Value` INT(1) NOT NULL,
-	PRIMARY KEY (`Vote_ID`),
-    FOREIGN KEY (`Item_ID`) REFERENCES Song_Item(`Item_ID`),
-    FOREIGN KEY (`User_ID`) REFERENCES User(`User_ID`)
-);
-
 CREATE TABLE `Playlist` (
     `Playlist_ID` VARCHAR(128) NOT NULL,
     `playlist_name` VARCHAR(128),
@@ -52,4 +39,14 @@ CREATE TABLE `InPlaylist`(
     PRIMARY KEY(`Entry_ID`),
     FOREIGN KEY (`Item_ID`) REFERENCES Song_Item(`Item_ID`),
     FOREIGN KEY (`Playlist_ID`) REFERENCES Playlist(`Playlist_ID`)
+);
+
+CREATE TABLE `Votes` (
+	`Vote_ID` INT(9) NOT NULL AUTO_INCREMENT,
+	`Entry_ID` INT(9) NOT NULL,
+	`User_ID` VARCHAR(64) NOT NULL,
+    `Value` INT(1) NOT NULL,
+	PRIMARY KEY (`Vote_ID`),
+    FOREIGN KEY (`Entry_ID`) REFERENCES In_Playlist(`Entry_ID`),
+    FOREIGN KEY (`User_ID`) REFERENCES User(`User_ID`)
 );
