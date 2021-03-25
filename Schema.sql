@@ -90,3 +90,29 @@ INSERT INTO Votes VALUES(10, 3, 'bevans', -1);
 INSERT INTO Votes VALUES(11, 1, 'jrmat20', 1);
 INSERT INTO Votes VALUES(12, 2, 'jrmat20', 1);
 INSERT INTO Votes VALUES(13, 5, 'jrmat20', 1);
+
+
+-- Get Playlist Data Query
+
+    -- Generic
+
+SELECT *
+    FROM Playlist 
+    INNER JOIN In_Playlist 
+        ON Playlist.Playlist_ID = In_Playlist.Playlist_ID
+        AND Playlist.Playlist_ID = "spotify_playlist_id_here"
+    LEFT JOIN Song_Item
+        ON In_Playlist.Item_ID = Song_Item.Item_ID;
+        
+
+    -- Specific
+
+SELECT Playlist.playlist_name, Song_Item.title, Song_Item.artist, In_Playlist.Votes
+    FROM Playlist 
+    INNER JOIN In_Playlist 
+        ON Playlist.Playlist_ID = In_Playlist.Playlist_ID
+        AND Playlist.Playlist_ID = "spotify_playlist_id_here"
+    LEFT JOIN Song_Item
+        ON In_Playlist.Item_ID = Song_Item.Item_ID
+
+
