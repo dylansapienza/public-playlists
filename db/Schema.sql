@@ -131,7 +131,7 @@ SELECT Entry_ID, SUM(Value)
 
 -- Update all Vote Values
 
-UPDATE  In_Playlist
+UPDATE In_Playlist
     SET Votes = (SELECT SUM(Value) 
                     FROM Votes
                     WHERE In_Playlist.Entry_ID=Votes.Entry_ID
@@ -162,4 +162,16 @@ UPDATE In_Playlist
 -- Set all Votes to 0
 
 UPDATE In_Playlist SET Votes = 0;
+
+-- Upvote Insert
+
+INSERT INTO Votes (Entry_ID, User_ID, Value) VALUES (4, '1250899172', 1);
+
+-- Downvote Insert
+
+INSERT INTO Votes (Entry_ID, User_ID, Value) VALUES (4, '1250899172', -1);
+
+-- Remove Vote Insert
+
+INSERT INTO Votes (Entry_ID, User_ID, Value) VALUES (4, '1250899172', 0);
 
