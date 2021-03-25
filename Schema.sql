@@ -111,7 +111,7 @@ SELECT Playlist.playlist_name, Song_Item.title, Song_Item.artist, In_Playlist.Vo
     FROM Playlist 
     INNER JOIN In_Playlist 
         ON Playlist.Playlist_ID = In_Playlist.Playlist_ID
-        AND Playlist.Playlist_ID = "spotify:playlist:7tuTpeNJqJPDCTZrNkEVOv"
+        AND Playlist.Playlist_ID = "spotify:playlist:1Nzv5B0KGgqyo1I53YN0Pk"
     LEFT JOIN Song_Item
         ON In_Playlist.Item_ID = Song_Item.Item_ID;
 
@@ -137,6 +137,17 @@ UPDATE  In_Playlist
                     WHERE In_Playlist.Entry_ID=Votes.Entry_ID
                     GROUP BY Entry_ID );
 
+-- Update Specific Vote Value
+    --Entry_ID is the In_Playlist Song Val
+
+UPDATE In_Playlist 
+    SET Votes = 
+        (SELECT SUM(Value) 
+            FROM Votes
+                WHERE Entry_ID = 2)
+    WHERE Entry_ID = 2;
+    
+
     -- +----------+------------+
     -- | Entry_ID | SUM(Value) |
     -- +----------+------------+
@@ -148,7 +159,7 @@ UPDATE  In_Playlist
     -- |        7 |         -1 |
     -- +----------+------------+
 
+-- Set all Votes to 0
 
-
-
+UPDATE In_Playlist SET Votes = 0;
 
