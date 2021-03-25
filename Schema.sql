@@ -111,8 +111,44 @@ SELECT Playlist.playlist_name, Song_Item.title, Song_Item.artist, In_Playlist.Vo
     FROM Playlist 
     INNER JOIN In_Playlist 
         ON Playlist.Playlist_ID = In_Playlist.Playlist_ID
-        AND Playlist.Playlist_ID = "spotify_playlist_id_here"
+        AND Playlist.Playlist_ID = "spotify:playlist:7tuTpeNJqJPDCTZrNkEVOv"
     LEFT JOIN Song_Item
-        ON In_Playlist.Item_ID = Song_Item.Item_ID
+        ON In_Playlist.Item_ID = Song_Item.Item_ID;
+
+    -- +---------------+------------------+------------------+-------+
+    -- | playlist_name | title            | artist           | Votes |
+    -- +---------------+------------------+------------------+-------+
+    -- | Neo-Soul      | Peri's Scope     | Bill Evans       |     0 |
+    -- | Neo-Soul      | That Old Feeling | Chet Baker       |     0 |
+    -- | Neo-Soul      | Bodies - Intro   | Jazmine Sullivan |     0 |
+    -- +---------------+------------------+------------------+-------+
+
+-- Vote Updating Queries
+
+SELECT Entry_ID, SUM(Value) 
+    FROM Votes 
+        GROUP BY Entry_ID;
+
+-- Update all Vote Values
+
+UPDATE  In_Playlist
+    SET Votes = (SELECT SUM(Value) 
+                    FROM Votes
+                    WHERE In_Playlist.Entry_ID=Votes.Entry_ID
+                    GROUP BY Entry_ID );
+
+    -- +----------+------------+
+    -- | Entry_ID | SUM(Value) |
+    -- +----------+------------+
+    -- |        1 |          2 |
+    -- |        2 |          3 |
+    -- |        3 |         -1 |
+    -- |        4 |          1 |
+    -- |        5 |          3 |
+    -- |        7 |         -1 |
+    -- +----------+------------+
+
+
+
 
 
