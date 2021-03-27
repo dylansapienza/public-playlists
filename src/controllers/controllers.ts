@@ -1,7 +1,7 @@
 import express = require("express");
 import querystring = require("querystring");
-import cookieParser = require("cookie-parser");
 import request = require("request");
+require("dotenv").config();
 
 const hello_world = (req: express.Request, res: express.Response) => {
   res.send("hello world");
@@ -20,9 +20,9 @@ const generateRandomString = function (length) {
   return text;
 };
 
-const client_id = "CLIENT_ID";
-const client_secret = "CLIENT_SECRET";
-const redirect_uri = "REDIRECT_URI";
+const client_id = process.env.CLIENT_ID;
+const client_secret = process.env.SECRET_ID;
+const redirect_uri = process.env.REDIRECT_URI;
 
 var stateKey = "spotify_auth_state";
 

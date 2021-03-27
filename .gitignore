@@ -1,3 +1,5 @@
 /dev_links
 /node_modules
 cloud_sql_proxy
+
+.env
