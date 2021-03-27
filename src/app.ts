@@ -2,6 +2,10 @@ import express = require("express");
 import cors = require("cors");
 import path = require("path");
 
+import request = require("request");
+import querystring = require("querystring");
+import cookieParser = require("cookie-parser");
+
 const app: express.Application = express();
 
 const port: any = process.env.PORT || 5000;
@@ -23,8 +27,9 @@ app.use(
 );
 
 //CORs Middleware
-
+app.use(express.static(__dirname + "/public"));
 app.use(cors());
+app.use(cookieParser());
 
 const api = require("./routes/routes");
 
