@@ -1,7 +1,24 @@
 import express = require("express");
 import querystring = require("querystring");
 import request = require("request");
+import SpotifyWebApi = require("spotify-web-api-node");
 require("dotenv").config();
+
+//Global Vars
+
+const client_id = process.env.CLIENT_ID;
+const client_secret = process.env.SECRET_ID;
+const redirect_uri = process.env.REDIRECT_URI;
+const stateKey = "spotify_auth_state";
+let access_token = process.env.ACCESS_TOKEN;
+
+var spotifyapi = new SpotifyWebApi({
+  clientId: client_id,
+  clientSecret: client_secret,
+  redirectUri: redirect_uri,
+});
+
+spotifyapi.setAccessToken(access_token);
 
 const hello_world = (req: express.Request, res: express.Response) => {
   res.send("hello world");
@@ -9,7 +26,7 @@ const hello_world = (req: express.Request, res: express.Response) => {
 
 module.exports.hello_world = hello_world;
 
-const generateRandomString = function (length) {
+const generateRandomString = function (length: number) {
   var text = "";
   var possible =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -20,18 +37,12 @@ const generateRandomString = function (length) {
   return text;
 };
 
-const client_id = process.env.CLIENT_ID;
-const client_secret = process.env.SECRET_ID;
-const redirect_uri = process.env.REDIRECT_URI;
-
-var stateKey = "spotify_auth_state";
-
 const spotify_login = (req: express.Request, res: express.Response) => {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = "user-read-private user-read-email";
+  var scope = "user-read-private user-read-email playlist-modify-public";
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
       querystring.stringify({
@@ -43,7 +54,6 @@ const spotify_login = (req: express.Request, res: express.Response) => {
       })
   );
 };
-
 module.exports.spotify_login = spotify_login;
 
 const spotify_callback = (req: express.Request, res: express.Response) => {
@@ -91,12 +101,15 @@ const spotify_callback = (req: express.Request, res: express.Response) => {
 
         // use the access token to access the Spotify Web API
         request.get(options, function (error, response, body) {
-          console.log(body);
+          const display_name = body.display_name;
+          const id = body.id;
+          console.log(display_name);
+          console.log(id);
         });
 
         // we can also pass the token to the browser to make requests from there
         res.redirect(
-          "/#" +
+          "/success" +
             querystring.stringify({
               access_token: access_token,
               refresh_token: refresh_token,
@@ -113,7 +126,6 @@ const spotify_callback = (req: express.Request, res: express.Response) => {
     });
   }
 };
-
 module.exports.spotify_callback = spotify_callback;
 
 const refresh_token = (req: express.Request, res: express.Response) => {
@@ -141,5 +153,21 @@ const refresh_token = (req: express.Request, res: express.Response) => {
     }
   });
 };
-
 module.exports.refresh_token = refresh_token;
+
+const createPlaylist = (req: express.Request, res: express.Response) => {
+  const playlist_name: String = req.body.p_name;
+  const desc: string = req.body.desc;
+
+  spotifyapi
+    .createPlaylist(playlist_name, { description: desc, public: true })
+    .then(
+      (data) => {
+        console.log("Created Playlist ", playlist_name);
+      },
+      (err) => {
+        console.log("Error", err);
+      }
+    );
+};
+module.exports.createPlaylist = createPlaylist;
