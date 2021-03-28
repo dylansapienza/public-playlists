@@ -10,7 +10,8 @@ const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.SECRET_ID;
 const redirect_uri = process.env.REDIRECT_URI;
 const stateKey = "spotify_auth_state";
-let access_token = process.env.ACCESS_TOKEN;
+// let access_token = process.env.ACCESS_TOKEN;
+const acc_refresh_token = process.env.REFRESH_TOKEN;
 
 var spotifyapi = new SpotifyWebApi({
   clientId: client_id,
@@ -18,7 +19,19 @@ var spotifyapi = new SpotifyWebApi({
   redirectUri: redirect_uri,
 });
 
-spotifyapi.setAccessToken(access_token);
+spotifyapi.setRefreshToken(acc_refresh_token);
+
+spotifyapi.refreshAccessToken().then(
+  function (data) {
+    console.log("The access token has been refreshed!");
+
+    // Save the access token so that it's used in future calls
+    spotifyapi.setAccessToken(data.body["access_token"]);
+  },
+  function (err) {
+    console.log("Could not refresh access token", err);
+  }
+);
 
 const hello_world = (req: express.Request, res: express.Response) => {
   res.send("hello world");
@@ -123,3 +136,32 @@ const createPlaylist = (req: express.Request, res: express.Response) => {
     );
 };
 module.exports.createPlaylist = createPlaylist;
+
+const addTracks = (req: express.Request, res: express.Response) => {
+  const playlist_uri: String = req.body.p_uri;
+  const track_uri: string = req.body.track;
+
+  spotifyapi.addTracksToPlaylist(playlist_uri, [track_uri]).then(
+    function (data) {
+      console.log("Added tracks to playlist!");
+      res.status(200);
+    },
+    function (err) {
+      console.log("Something went wrong!", err);
+    }
+  );
+};
+
+/**TODO:
+Spotify API Side:
+  - Reposition Tracks
+  - Insert Track at correct position
+
+Server-Side:
+  - Vote tracks
+  - On adding track, store data
+  - On creating playlist, store data
+
+**/
+
+module.exports.addTracks = addTracks;

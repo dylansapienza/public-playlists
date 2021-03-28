@@ -13,4 +13,6 @@ router.get("/refresh_token", controllers.refresh_token);
 
 router.post("/createplaylist", controllers.createPlaylist);
 
+router.post("/addTracks", controllers.addTracks);
+
 module.exports = router;
