@@ -35,6 +35,10 @@ const api = require("./routes/routes");
 
 app.use("/api", api);
 
+app.get("/success", (req: express.Request, res: express.Response) => {
+  res.send("Logged in and Authorized");
+});
+
 app.get("/", (req: express.Request, res: express.Response) => {
   res.send("Hello");
 });
