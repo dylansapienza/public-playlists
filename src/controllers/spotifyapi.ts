@@ -1,6 +1,7 @@
 import express = require("express");
 import request = require("request");
 import SpotifyWebApi = require("spotify-web-api-node");
+const db = require("./db");
 
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.SECRET_ID;
@@ -41,7 +42,7 @@ const generateRandomString = function (length: number) {
   return text;
 };
 
-const spotify_login = (req: express.Request, res: express.Response) => {
+const login = (req: express.Request, res: express.Response) => {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
 
@@ -56,9 +57,9 @@ const spotify_login = (req: express.Request, res: express.Response) => {
 
   res.redirect(authorizeURL);
 };
-module.exports.spotify_login = spotify_login;
+module.exports.login = login;
 
-const spotify_callback = (req: express.Request, res: express.Response) => {
+const callback = (req: express.Request, res: express.Response) => {
   var code = req.query.code || null;
 
   spotifyapi.authorizationCodeGrant(code).then(
@@ -77,7 +78,7 @@ const spotify_callback = (req: express.Request, res: express.Response) => {
     }
   );
 };
-module.exports.spotify_callback = spotify_callback;
+module.exports.callback = callback;
 
 const refresh_token = (req: express.Request, res: express.Response) => {
   var refresh_token = req.query.refresh_token;
@@ -107,7 +108,7 @@ const refresh_token = (req: express.Request, res: express.Response) => {
 module.exports.refresh_token = refresh_token;
 
 const createPlaylist = (req: express.Request, res: express.Response) => {
-  const playlist_name: String = req.body.p_name;
+  const playlist_name: string = req.body.p_name;
   const desc: string = req.body.desc;
 
   spotifyapi
@@ -127,15 +128,24 @@ const createPlaylist = (req: express.Request, res: express.Response) => {
 module.exports.createPlaylist = createPlaylist;
 
 const addTracks = (req: express.Request, res: express.Response) => {
-  const playlist_uri: String = req.body.p_uri;
-  const track_uri: string = req.body.track;
+  const playlist_uri: string = req.body.p_uri;
+  const track_uri: string = "spotify:track:" + req.body.track;
 
   spotifyapi.addTracksToPlaylist(playlist_uri, [track_uri]).then(
-    function (data) {
+    (data) => {
+      spotifyapi.getTrack(req.body.track).then((track_data) => {
+        db.addTracktoDB({
+          uri: track_data.body.uri,
+          title: track_data.body.name,
+          artist: track_data.body.album.artists[0].name,
+          album: track_data.body.album.name,
+          album_art: track_data.body.album.images[0].url,
+        });
+      });
       console.log("Added tracks to playlist!");
       res.status(200);
     },
-    function (err) {
+    (err) => {
       console.log("Something went wrong!", err);
     }
   );

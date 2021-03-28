@@ -20,11 +20,41 @@ connection.connect((err) => {
   console.log("connected as id" + connection.threadId);
 });
 
-connection.query("SELECT * FROM User", (err, res, fields) => {
-  if (err) {
-    console.log("Query Error", err);
-  }
-  if (res) {
-    console.log(res);
-  }
-});
+type track_data = {
+  uri: String;
+  title: String;
+  artist: String;
+  album: String;
+  album_art: String;
+};
+
+const addTracktoDB = (track_data: track_data) => {
+  console.log("DB ENTERED");
+  connection.query(
+    "SELECT * FROM Song_Item WHERE uri = ?",
+    [track_data.uri],
+    (err, res) => {
+      if (err) {
+        console.error(err);
+      }
+      if (res) {
+        if (!res[0]) {
+          connection.query(
+            `INSERT INTO Song_Item (uri, title, artist, album, album_art) VALUES ("${track_data.uri}", "${track_data.title}", "${track_data.artist}", "${track_data.album}", "${track_data.album_art}")`,
+            (err, res) => {
+              if (err) {
+                console.error(err);
+              }
+              if (res) {
+                console.log(res);
+              }
+            }
+          );
+        } else {
+          console.log(res[0].title + " is already a Song_Item");
+        }
+      }
+    }
+  );
+};
+module.exports.addTracktoDB = addTracktoDB;
