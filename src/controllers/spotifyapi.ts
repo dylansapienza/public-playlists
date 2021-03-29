@@ -9,7 +9,7 @@ const redirect_uri = process.env.REDIRECT_URI;
 const stateKey = "spotify_auth_state";
 const acc_refresh_token = process.env.REFRESH_TOKEN;
 
-var spotifyapi = new SpotifyWebApi({
+var spotifyapi: any = new SpotifyWebApi({
   clientId: client_id,
   clientSecret: client_secret,
   redirectUri: redirect_uri,
@@ -107,6 +107,12 @@ const refresh_token = (req: express.Request, res: express.Response) => {
 };
 module.exports.refresh_token = refresh_token;
 
+/**
+ * Add Track to Spotify Playlist and Public Playlist
+ * @param {string} p_name The playlist's name
+ * @param {string} p_desc The playlist description
+ * TODO: Register Playlist with Public Playlist DB
+ */
 const createPlaylist = (req: express.Request, res: express.Response) => {
   const playlist_name: string = req.body.p_name;
   const desc: string = req.body.desc;
@@ -127,12 +133,18 @@ const createPlaylist = (req: express.Request, res: express.Response) => {
 };
 module.exports.createPlaylist = createPlaylist;
 
-const addTracks = (req: express.Request, res: express.Response) => {
+/**
+ * Add Track to Spotify Playlist and Public Playlist
+ * @param {string} p_uri The playlist's URI
+ * @param {string} track The track's URI
+ * Do NOT Include spotify:xxxx: portion, just the unique key
+ */
+const addTracktoPlaylist = (req: express.Request, res: express.Response) => {
   const playlist_uri: string = req.body.p_uri;
   const track_uri: string = "spotify:track:" + req.body.track;
 
   spotifyapi.addTracksToPlaylist(playlist_uri, [track_uri]).then(
-    (data) => {
+    (data: JSON) => {
       spotifyapi.getTrack(req.body.track).then((track_data) => {
         db.addTracktoDB({
           uri: track_data.body.uri,
@@ -140,9 +152,11 @@ const addTracks = (req: express.Request, res: express.Response) => {
           artist: track_data.body.album.artists[0].name,
           album: track_data.body.album.name,
           album_art: track_data.body.album.images[0].url,
+          playlist_uri: playlist_uri,
         });
       });
-      console.log("Added tracks to playlist!");
+
+      console.log("Added track to playlist!");
       res.status(200);
     },
     (err) => {
@@ -150,4 +164,4 @@ const addTracks = (req: express.Request, res: express.Response) => {
     }
   );
 };
-module.exports.addTracks = addTracks;
+module.exports.addTracktoPlaylist = addTracktoPlaylist;

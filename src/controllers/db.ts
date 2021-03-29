@@ -26,10 +26,10 @@ type track_data = {
   artist: String;
   album: String;
   album_art: String;
+  playlist_uri: String;
 };
 
 const addTracktoDB = (track_data: track_data) => {
-  console.log("DB ENTERED");
   connection.query(
     "SELECT * FROM Song_Item WHERE uri = ?",
     [track_data.uri],
@@ -46,7 +46,10 @@ const addTracktoDB = (track_data: track_data) => {
                 console.error(err);
               }
               if (res) {
-                console.log(res);
+                addIn_Playlist({
+                  Item_ID: res.insertId,
+                  Playlist_ID: track_data.playlist_uri,
+                });
               }
             }
           );
@@ -58,3 +61,22 @@ const addTracktoDB = (track_data: track_data) => {
   );
 };
 module.exports.addTracktoDB = addTracktoDB;
+
+type In_Playlist_Data = {
+  Item_ID: Number;
+  Playlist_ID: String;
+};
+
+const addIn_Playlist = (In_Playlist_Data: In_Playlist_Data) => {
+  connection.query(
+    `INSERT INTO In_Playlist (Item_ID, Playlist_ID, Votes) VALUES ("${In_Playlist_Data.Item_ID}", "spotify:playlist:${In_Playlist_Data.Playlist_ID}", "0")`,
+    (err, res) => {
+      if (err) {
+        console.error(err);
+      }
+      if (res) {
+        console.log("Added to In_Playlist!");
+      }
+    }
+  );
+};

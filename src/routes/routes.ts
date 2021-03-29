@@ -13,6 +13,6 @@ router.get("/refresh_token", spotifyapi.refresh_token);
 
 router.post("/createplaylist", spotifyapi.createPlaylist);
 
-router.post("/addTracks", spotifyapi.addTracks);
+router.post("/addTracks", spotifyapi.addTracktoPlaylist);
 
 module.exports = router;
