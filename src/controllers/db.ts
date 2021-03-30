@@ -140,18 +140,7 @@ const voteOnSong = (req: express.Request, res: express.Response) => {
               console.log(res);
               console.log("Vote Ballot Updated!");
 
-              //Update Vote Count
-              connection.query(
-                `UPDATE In_Playlist SET Votes = (SELECT SUM(Value) FROM Votes WHERE Entry_ID = ${vote_data.Entry_ID}) WHERE Entry_ID = ${vote_data.Entry_ID};`,
-                (err, res) => {
-                  if (err) {
-                    console.error(err);
-                  }
-                  if (res) {
-                    console.log("Votes Updated");
-                  }
-                }
-              );
+              updateVoteCount(vote_data);
             }
           }
         );
@@ -166,18 +155,7 @@ const voteOnSong = (req: express.Request, res: express.Response) => {
               console.log(res);
               console.log("Vote Ballot Created!");
 
-              //Update Vote Count
-              connection.query(
-                `UPDATE In_Playlist SET Votes = (SELECT SUM(Value) FROM Votes WHERE Entry_ID = ${vote_data.Entry_ID}) WHERE Entry_ID = ${vote_data.Entry_ID};`,
-                (err, res) => {
-                  if (err) {
-                    console.error(err);
-                  }
-                  if (res) {
-                    console.log("Votes Updated");
-                  }
-                }
-              );
+              updateVoteCount(vote_data);
             }
           }
         );
@@ -187,4 +165,21 @@ const voteOnSong = (req: express.Request, res: express.Response) => {
 };
 module.exports.voteOnSong = voteOnSong;
 
-const reorderPlaylist = () => {};
+const updateVoteCount = (vote_data: vote_data) => {
+  //Update Vote Count
+  connection.query(
+    `UPDATE In_Playlist SET Votes = (SELECT SUM(Value) FROM Votes WHERE Entry_ID = ${vote_data.Entry_ID}) WHERE Entry_ID = ${vote_data.Entry_ID};`,
+    (err, res) => {
+      if (err) {
+        console.error(err);
+      }
+      if (res) {
+        console.log("Votes Updated");
+      }
+    }
+  );
+
+  //Check if song positions need to be adjusted
+  //If ballot > 0, check location above
+  //If ballot < 0, check location below
+};

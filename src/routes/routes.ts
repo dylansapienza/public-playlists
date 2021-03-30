@@ -17,4 +17,6 @@ router.post("/addTracks", spotifyapi.addTracktoPlaylist);
 
 router.post("/castBallot", database.voteOnSong);
 
+router.post("/reorderPlaylist", spotifyapi.reorderPlaylist);
+
 module.exports = router;

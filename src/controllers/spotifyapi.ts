@@ -166,3 +166,25 @@ const addTracktoPlaylist = (req: express.Request, res: express.Response) => {
   );
 };
 module.exports.addTracktoPlaylist = addTracktoPlaylist;
+
+type reorderData = {
+  playlist_uri: String;
+  track1_pos: Number;
+  track2_pos: Number;
+};
+
+const reorderPlaylist = (req: express.Request, res: express.Response) => {
+  const playlist_uri: String = "3NeD10o3BAjWHVrrFxTg4f";
+
+  //Uses Array Index Positioning, nth spot is n-1
+
+  const track1_pos: Number = 2;
+  const track2_pos: Number = 0;
+  spotifyapi
+    .reorderTracksInPlaylist(playlist_uri, track1_pos, track2_pos)
+    .then((data) => {
+      console.log(data);
+      console.log("reordered!");
+    });
+};
+module.exports.reorderPlaylist = reorderPlaylist;

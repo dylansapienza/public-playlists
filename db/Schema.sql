@@ -102,8 +102,8 @@ SELECT *
         ON Playlist.Playlist_ID = In_Playlist.Playlist_ID
         AND Playlist.Playlist_ID = "spotify_playlist_id_here"
     LEFT JOIN Song_Item
-        ON In_Playlist.Item_ID = Song_Item.Item_ID;
-        
+        ON In_Playlist.Item_ID = Song_Item.Item_ID
+    ORDER BY Votes DESC;
 
     -- Specific
 
@@ -111,9 +111,10 @@ SELECT Playlist.playlist_name, Song_Item.title, Song_Item.artist, In_Playlist.Vo
     FROM Playlist 
     INNER JOIN In_Playlist 
         ON Playlist.Playlist_ID = In_Playlist.Playlist_ID
-        AND Playlist.Playlist_ID = "spotify:playlist:3NeD10o3BAjWHVrrFxTg4f"
+        AND Playlist.Playlist_ID = "spotify:playlist:1Nzv5B0KGgqyo1I53YN0Pk"
     LEFT JOIN Song_Item
-        ON In_Playlist.Item_ID = Song_Item.Item_ID;
+        ON In_Playlist.Item_ID = Song_Item.Item_ID
+    ORDER BY Votes DESC;
 
     -- +---------------+------------------+------------------+-------+
     -- | playlist_name | title            | artist           | Votes |
