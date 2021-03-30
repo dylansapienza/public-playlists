@@ -186,3 +186,5 @@ const voteOnSong = (req: express.Request, res: express.Response) => {
   );
 };
 module.exports.voteOnSong = voteOnSong;
+
+const reorderPlaylist = () => {};
