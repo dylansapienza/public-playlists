@@ -46,7 +46,7 @@ const addTracktoDB = (track_data: track_data) => {
                 console.error(err);
               }
               if (res) {
-                addIn_Playlist({
+                addToPlaylist({
                   Item_ID: res.insertId,
                   Playlist_ID: track_data.playlist_uri,
                 });
@@ -62,12 +62,32 @@ const addTracktoDB = (track_data: track_data) => {
 };
 module.exports.addTracktoDB = addTracktoDB;
 
+type playlist_reg = {
+  name: String;
+  uri: String;
+};
+
+const registerPlaylist = (playlist_reg: playlist_reg) => {
+  connection.query(
+    `INSERT INTO Playlist VALUES ("spotify:playlist:${playlist_reg.uri}", "${playlist_reg.name}")`,
+    (err, res) => {
+      if (err) {
+        console.error(err);
+      }
+      if (res) {
+        console.log(`Playist ${playlist_reg.name} created!`);
+      }
+    }
+  );
+};
+module.exports.registerPlaylist = registerPlaylist;
+
 type In_Playlist_Data = {
   Item_ID: Number;
   Playlist_ID: String;
 };
 
-const addIn_Playlist = (In_Playlist_Data: In_Playlist_Data) => {
+const addToPlaylist = (In_Playlist_Data: In_Playlist_Data) => {
   connection.query(
     `INSERT INTO In_Playlist (Item_ID, Playlist_ID, Votes) VALUES ("${In_Playlist_Data.Item_ID}", "spotify:playlist:${In_Playlist_Data.Playlist_ID}", "0")`,
     (err, res) => {
@@ -78,5 +98,31 @@ const addIn_Playlist = (In_Playlist_Data: In_Playlist_Data) => {
         console.log("Added to In_Playlist!");
       }
     }
+  );
+};
+module.exports.addToPlaylist = addToPlaylist;
+
+type vote_data = {
+  Entry_ID: Number;
+  User_ID: String;
+  VoteVal: Number;
+};
+
+const voteOnSong = (vote_data: vote_data) => {
+  let ballot: Number;
+
+  if (vote_data.VoteVal > 0) {
+    ballot = 1;
+  }
+  if (vote_data.VoteVal === 0) {
+    ballot = 0;
+  }
+  if (vote_data.VoteVal < 0) {
+    ballot = -1;
+  }
+
+  connection.query(
+    `INSERT INTO Votes (Entry_ID, User_ID, Value) VALUES (${vote_data.Entry_ID}, "1250899172", ${ballot});`,
+    (err, res) => {}
   );
 };

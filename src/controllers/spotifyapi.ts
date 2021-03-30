@@ -15,8 +15,6 @@ var spotifyapi: any = new SpotifyWebApi({
   redirectUri: redirect_uri,
 });
 
-//Global Vars
-
 spotifyapi.setRefreshToken(acc_refresh_token);
 
 spotifyapi.refreshAccessToken().then(
@@ -108,10 +106,11 @@ const refresh_token = (req: express.Request, res: express.Response) => {
 module.exports.refresh_token = refresh_token;
 
 /**
- * Add Track to Spotify Playlist and Public Playlist
+ * Create Spotify Playlist and Register as Public Playlist
  * @param {string} p_name The playlist's name
  * @param {string} p_desc The playlist description
  * TODO: Register Playlist with Public Playlist DB
+ *  p_desc not applying
  */
 const createPlaylist = (req: express.Request, res: express.Response) => {
   const playlist_name: string = req.body.p_name;
@@ -123,6 +122,7 @@ const createPlaylist = (req: express.Request, res: express.Response) => {
       (data) => {
         console.log(data);
         console.log("Created Playlist ", playlist_name);
+        db.registerPlaylist({ name: playlist_name, uri: data.body.id });
         res.status(200);
         res.send("Created Playlist " + playlist_name);
       },
@@ -158,6 +158,7 @@ const addTracktoPlaylist = (req: express.Request, res: express.Response) => {
 
       console.log("Added track to playlist!");
       res.status(200);
+      res.send(`Added ${playlist_uri} to ${track_uri}`);
     },
     (err) => {
       console.log("Something went wrong!", err);

@@ -111,7 +111,7 @@ SELECT Playlist.playlist_name, Song_Item.title, Song_Item.artist, In_Playlist.Vo
     FROM Playlist 
     INNER JOIN In_Playlist 
         ON Playlist.Playlist_ID = In_Playlist.Playlist_ID
-        AND Playlist.Playlist_ID = "spotify:playlist:5IipiSmqWMRKGCKiiylpO3"
+        AND Playlist.Playlist_ID = "spotify:playlist:3NeD10o3BAjWHVrrFxTg4f"
     LEFT JOIN Song_Item
         ON In_Playlist.Item_ID = Song_Item.Item_ID;
 
