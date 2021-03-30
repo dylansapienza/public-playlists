@@ -1,3 +1,4 @@
+import express = require("express");
 const mysql = require("mysql");
 
 const host = process.env.HOST;
@@ -108,13 +109,17 @@ type vote_data = {
   VoteVal: Number;
 };
 
-const voteOnSong = (vote_data: vote_data) => {
+const voteOnSong = (req: express.Request, res: express.Response) => {
+  const vote_data = req.body;
+
+  //Check if vote already exists, if so update, if not create new ballot
+
   let ballot: Number;
 
   if (vote_data.VoteVal > 0) {
     ballot = 1;
   }
-  if (vote_data.VoteVal === 0) {
+  if (vote_data.VoteVal == 0) {
     ballot = 0;
   }
   if (vote_data.VoteVal < 0) {
@@ -122,7 +127,62 @@ const voteOnSong = (vote_data: vote_data) => {
   }
 
   connection.query(
-    `INSERT INTO Votes (Entry_ID, User_ID, Value) VALUES (${vote_data.Entry_ID}, "1250899172", ${ballot});`,
-    (err, res) => {}
+    `SELECT * FROM Votes WHERE Entry_ID = ${vote_data.Entry_ID} AND User_ID = "${vote_data.User_ID}"`,
+    (err, res) => {
+      if (res[0]) {
+        connection.query(
+          `UPDATE Votes SET Value = ${ballot} WHERE Entry_ID = ${vote_data.Entry_ID} AND User_ID = "${vote_data.User_ID}"`,
+          (err, res) => {
+            if (err) {
+              console.error(err);
+            }
+            if (res) {
+              console.log(res);
+              console.log("Vote Ballot Updated!");
+
+              //Update Vote Count
+              connection.query(
+                `UPDATE In_Playlist SET Votes = (SELECT SUM(Value) FROM Votes WHERE Entry_ID = ${vote_data.Entry_ID}) WHERE Entry_ID = ${vote_data.Entry_ID};`,
+                (err, res) => {
+                  if (err) {
+                    console.error(err);
+                  }
+                  if (res) {
+                    console.log("Votes Updated");
+                  }
+                }
+              );
+            }
+          }
+        );
+      } else {
+        connection.query(
+          `INSERT INTO Votes (Entry_ID, User_ID, Value) VALUES (${vote_data.Entry_ID}, "1250899172", ${ballot});`,
+          (err, res) => {
+            if (err) {
+              console.error(err);
+            }
+            if (res) {
+              console.log(res);
+              console.log("Vote Ballot Created!");
+
+              //Update Vote Count
+              connection.query(
+                `UPDATE In_Playlist SET Votes = (SELECT SUM(Value) FROM Votes WHERE Entry_ID = ${vote_data.Entry_ID}) WHERE Entry_ID = ${vote_data.Entry_ID};`,
+                (err, res) => {
+                  if (err) {
+                    console.error(err);
+                  }
+                  if (res) {
+                    console.log("Votes Updated");
+                  }
+                }
+              );
+            }
+          }
+        );
+      }
+    }
   );
 };
+module.exports.voteOnSong = voteOnSong;
