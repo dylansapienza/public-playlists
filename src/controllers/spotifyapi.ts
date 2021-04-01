@@ -128,6 +128,8 @@ const createPlaylist = (req: express.Request, res: express.Response) => {
       },
       (err) => {
         console.log("Error", err);
+        res.status(500);
+        res.send("Error!");
       }
     );
 };
@@ -185,6 +187,8 @@ const reorderPlaylist = (req: express.Request, res: express.Response) => {
     .then((data) => {
       console.log(data);
       console.log("reordered!");
+      res.status(200);
+      res.send("Reorder Successful");
     });
 };
 module.exports.reorderPlaylist = reorderPlaylist;

@@ -40,7 +40,7 @@ app.get("/success", (req: express.Request, res: express.Response) => {
 });
 
 app.get("/", (req: express.Request, res: express.Response) => {
-  res.send("Hello");
+  res.send("Homepage: Navigate to /api/ for routes");
 });
 
 app.listen(port, () => console.log(`Server Running on PORT ${port}`));
