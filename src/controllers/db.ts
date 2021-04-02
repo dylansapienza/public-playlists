@@ -56,8 +56,12 @@ const addTracktoDB = (track_data: track_data) => {
           );
         } else {
           console.log(res[0].title + " is already a Song_Item");
-          res.status(200);
-          res.send("No Song_Item entry needed");
+          addToPlaylist({
+            Item_ID: res[0].Item_ID,
+            Playlist_ID: track_data.playlist_uri,
+          });
+
+          // res.send("No Song_Item entry needed");
         }
       }
     }
@@ -99,10 +103,6 @@ const addToPlaylist = (In_Playlist_Data: In_Playlist_Data) => {
       }
       if (res) {
         console.log("Added to In_Playlist!");
-        res.status(200);
-        res.send(
-          `Added ${In_Playlist_Data.Item_ID} to ${In_Playlist_Data.Playlist_ID}`
-        );
       }
     }
   );
@@ -147,8 +147,6 @@ const voteOnSong = (req: express.Request, res: express.Response) => {
               console.log("Vote Ballot Updated!");
 
               updateVoteCount(vote_data);
-              res.status(200);
-              res.send("Vote Ballot Adjusted!");
             }
           }
         );
@@ -164,8 +162,6 @@ const voteOnSong = (req: express.Request, res: express.Response) => {
               console.log("Vote Ballot Created!");
 
               updateVoteCount(vote_data);
-              res.status(200);
-              res.send("Vote Ballot Casted");
             }
           }
         );
