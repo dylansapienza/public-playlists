@@ -1,4 +1,5 @@
 import express = require("express");
+const spotifyroutes = require("./spotifyapi");
 const mysql = require("mysql");
 
 const host = process.env.HOST;
@@ -181,6 +182,20 @@ const updateVoteCount = (vote_data: vote_data) => {
       }
       if (res) {
         console.log("Votes Updated");
+
+        // Need to Implement Spotify Side Playlist Updating
+
+        // connection.query(
+        //   `SELECT * FROM In_Playlist WHERE Entry_ID = ${vote_data.Entry_ID}`,
+        //   (err, res) => {
+        //     if (err) {
+        //       console.error(err);
+        //     }
+        //     if (res) {
+
+        // //   }
+
+        // spotifyroutes.reorderPlaylist(vote_data);
       }
     }
   );

@@ -169,26 +169,32 @@ const addTracktoPlaylist = (req: express.Request, res: express.Response) => {
 };
 module.exports.addTracktoPlaylist = addTracktoPlaylist;
 
-type reorderData = {
-  playlist_uri: String;
-  track1_pos: Number;
-  track2_pos: Number;
-};
+// type reorderData = {
+//   playlist_uri: String;
+//   track1_pos: Number;
+//   track2_pos: Number;
+// };
 
-const reorderPlaylist = (req: express.Request, res: express.Response) => {
-  const playlist_uri: String = "3NeD10o3BAjWHVrrFxTg4f";
+// type vote_data = {
+//   Entry_ID: Number;
+//   User_ID: String;
+//   VoteVal: Number;
+// };
 
-  //Uses Array Index Positioning, nth spot is n-1
+// const reorderPlaylist = (vote_data: vote_data) => {
+//   const playlist_uri: String = "3NeD10o3BAjWHVrrFxTg4f";
 
-  const track1_pos: Number = 2;
-  const track2_pos: Number = 0;
-  spotifyapi
-    .reorderTracksInPlaylist(playlist_uri, track1_pos, track2_pos)
-    .then((data) => {
-      console.log(data);
-      console.log("reordered!");
-      res.status(200);
-      res.send("Reorder Successful");
-    });
-};
-module.exports.reorderPlaylist = reorderPlaylist;
+//   //Uses Array Index Positioning, nth spot is n-1
+//   const track1_pos: Number = 2;
+//   const track2_pos: Number = 0;
+
+//   spotifyapi
+//     .reorderTracksInPlaylist(playlist_uri, track1_pos, track2_pos)
+//     .then((data) => {
+//       console.log(data);
+//       console.log("reordered!");
+//       res.status(200);
+//       res.send("Reorder Successful");
+//     });
+// };
+// module.exports.reorderPlaylist = reorderPlaylist;
