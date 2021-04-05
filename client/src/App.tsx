@@ -10,7 +10,6 @@ import {
 import * as React from "react";
 import { Logo } from "./Logo";
 import { LoginForm } from "./components/LoginForm";
-import { FaFacebook, FaGoogle, FaGithub } from "react-icons/fa";
 import { DividerWithText } from "./components/DividerWithText";
 
 export const App = () => {
@@ -29,7 +28,7 @@ export const App = () => {
           Sign in to your account
         </Heading>
         <Text mt="4" align="center" maxW="md" fontWeight="medium">
-          <span>Don&apos;t have an account?</span>
+          <span>Don&apos;t have a Spotify account?</span>
           <Box
             as="a"
             marginStart="1"
@@ -38,7 +37,7 @@ export const App = () => {
             _hover={{ color: "blue.600" }}
             display={{ base: "block", sm: "revert" }}
           >
-            Start free trial
+            More info.
           </Box>
         </Text>
       </Box>
@@ -51,21 +50,6 @@ export const App = () => {
           rounded={{ sm: "lg" }}
         >
           <LoginForm />
-          <DividerWithText mt="6">or continue with</DividerWithText>
-          <SimpleGrid mt="6" columns={3} spacing="3">
-            <Button color="currentColor" variant="outline">
-              <VisuallyHidden>Login with Facebook</VisuallyHidden>
-              <FaFacebook />
-            </Button>
-            <Button color="currentColor" variant="outline">
-              <VisuallyHidden>Login with Google</VisuallyHidden>
-              <FaGoogle />
-            </Button>
-            <Button color="currentColor" variant="outline">
-              <VisuallyHidden>Login with Github</VisuallyHidden>
-              <FaGithub />
-            </Button>
-          </SimpleGrid>
         </Box>
       </Box>
     </Box>
