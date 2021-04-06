@@ -204,3 +204,42 @@ const updateVoteCount = (vote_data: vote_data) => {
   //If ballot > 0, check location above
   //If ballot < 0, check location below
 };
+
+type login_data = {
+  spotify_id: String;
+  username: String;
+  cookie: String;
+};
+
+const login = (login_data: login_data) => {
+  connection.query(
+    "SELECT * FROM User WHERE = ?",
+    [login_data.spotify_id],
+    (err, res) => {
+      if (res) {
+        if (!res[0]) {
+          connection.query(
+            `INSERT INTO User VALUES ("${login_data.spotify_id}", "${login_data.username}, ${login_data.cookie}")`,
+            (err, res) => {
+              if (err) {
+              }
+              if (res) {
+              }
+            }
+          );
+        } else {
+          console.log(res[0].spotify_id + " is already a User");
+          connection.query(
+            `UPDATE User SET password = ${login_data.cookie} WHERE User_ID = "${login_data.spotify_id}"`,
+            (err, res) => {
+              if (err) {
+              }
+              if (res) {
+              }
+            }
+          );
+        }
+      }
+    }
+  );
+};

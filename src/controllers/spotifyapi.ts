@@ -1,5 +1,6 @@
 import express = require("express");
 import request = require("request");
+import Cookies from "js-cookie";
 import SpotifyWebApi = require("spotify-web-api-node");
 const db = require("./db");
 
@@ -71,6 +72,12 @@ const callback = (req: express.Request, res: express.Response) => {
       spotifyapi.setRefreshToken(data.body["refresh_token"]);
 
       //Cookie Store
+
+      const unique_id = generateRandomString(16);
+
+      Cookies.set("unique_id", unique_id);
+
+      //Database Update / Create User
 
       res.redirect("/success");
     },
