@@ -69,6 +69,9 @@ const callback = (req: express.Request, res: express.Response) => {
       // Set the access token on the API object to use it in later calls
       spotifyapi.setAccessToken(data.body["access_token"]);
       spotifyapi.setRefreshToken(data.body["refresh_token"]);
+
+      //Cookie Store
+
       res.redirect("/success");
     },
     function (err) {
